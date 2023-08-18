@@ -1,14 +1,32 @@
 import { AiOutlinePlus } from "react-icons/ai";
 import { MdDeleteForever } from "react-icons/md";
 import { GoSignOut } from "react-icons/go";
+import { useAuth } from "@/firebase/auth";
+import { useRouter } from "next/router";
+import Loader from "@/components/Loader";
+import { useEffect } from "react"; 
+
 const arr = [
     1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
 ];
 
 export default function Home() {
+
+    const {authUser , isLoading, signOut } = useAuth();
+
+    const router = useRouter();
+
+    useEffect(() => {
+        if(!isLoading && authUser){
+            router.push("/");
+        }
+    }, [authUser, isLoading]);
+
     return (
         <main className="">
-            <div className="bg-black text-white w-44 py-4 mt-10 rounded-lg transition-transform hover:bg-black/[0.8] active:scale-90 flex items-center justify-center gap-2 font-medium shadow-md fixed bottom-5 right-5 cursor-pointer">
+            <div className="bg-black text-white w-44 py-4 mt-10 rounded-lg transition-transform hover:bg-black/[0.8] active:scale-90 flex items-center justify-center gap-2 font-medium shadow-md fixed bottom-5 right-5 cursor-pointer"
+                onClick={signOut}
+            >
                 <GoSignOut size={18} />
                 <span>Logout</span>
             </div>

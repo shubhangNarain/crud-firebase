@@ -1,12 +1,26 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { auth } from "../firebase/firebase";
 import { GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword } from "firebase/auth"; 
+import { useAuth } from "@/firebase/auth";
+import { useRouter } from "next/router";
+import Loader from "@/components/Loader";
+
+
 
 const LoginForm = () => {
 
     const [email, setEmail] = useState(null);
     const [password, setPassword] = useState(null);
+    const {authUser , isLoading} = useAuth();
+
+    const router = useRouter();
+
+    useEffect(() => {
+        if(!isLoading && authUser){
+            router.push("/");
+        }
+    }, [authUser, isLoading]);
 
     const loginHandler = async () => {
         if(!email || !password) return;
@@ -27,7 +41,7 @@ const LoginForm = () => {
         }
     }
 
-    return (
+    return isLoading || (!isLoading && authUser) ? <Loader/> : (
         <main className="flex lg:h-[100vh]">
             <div className="w-full lg:w-[60%] p-8 md:p-14 flex items-center justify-center lg:justify-start">
                 <div className="p-8 w-[600px]">
